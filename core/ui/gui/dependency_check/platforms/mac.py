@@ -35,4 +35,4 @@ from core.controllers.dependency_check.platforms.mac import (SYSTEM_NAME,
 PIP_PACKAGES.extend([PIPDependency('xdot', 'xdot'),])
 
 SYSTEM_PACKAGES['GRAPHVIZ'] = ['graphviz']
-SYSTEM_PACKAGES['GTK'] = ['py27-pygtksourceview', 'py27-pygtk']
+SYSTEM_PACKAGES['GTK'] = ['pygtksourceview', 'pygtk']

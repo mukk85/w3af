@@ -26,20 +26,19 @@ from core.controllers.dependency_check.pip_dependency import PIPDependency
 
 SYSTEM_NAME = 'Mac OS X'
 
-PKG_MANAGER_CMD = 'sudo port install'
+PKG_MANAGER_CMD = 'brew install'
 
 #
 #    Remember to use http://www.macports.org/ports.php to search for packages
 #
 SYSTEM_PACKAGES = {
-                   'PIP': ['py27-pip'],
+                   'PIP': [],
                    # Python port includes the dev headers
-                   'C_BUILD': ['python27', 'py27-setuptools',
-                                'gcc48', 'autoconf', 'automake'],
-                   'GIT': ['git-core'],
-                   'SCAPY': ['py27-pcapy', 'py27-libdnet'],
+                   'C_BUILD': ['python', 'gcc49', 'autoconf', 'automake'],
+                   'GIT': ['git'],
+                   'SCAPY': ['scapy'],
                   }
-PIP_CMD = 'pip-2.7' 
+PIP_CMD = 'pip' 
 
 PHPLY_GIT = 'git+git://github.com/ramen/phply.git#egg=phply'
 
@@ -70,7 +69,7 @@ def os_package_is_installed(package_name):
     installed = 'The following ports are currently installed'
     
     try:
-        p = subprocess.Popen(['port', '-v', 'installed', package_name],
+        p = subprocess.Popen(['brew', 'list', package_name, '--versions'],
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
     except OSError:
@@ -79,16 +78,14 @@ def os_package_is_installed(package_name):
     else:
         port_output = p.stdout.read()
 
-        if not_installed in port_output:
-            return False
-        elif installed in port_output:
+        if port_output:
             return True
         else:
-            return None
+            return False
 
 def after_hook():
     # Is the default python executable the one in macports?
-    if sys.executable.startswith('/opt/'):
+    if sys.executable.startswith('/usr/local/'):
         # That's what we need since pip-2.7 will install all the libs in
         # that python site-packages directory
         return
